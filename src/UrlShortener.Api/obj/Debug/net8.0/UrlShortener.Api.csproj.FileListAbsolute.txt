@@ -110,3 +110,4 @@
 /Users/samermahamid/astro/interview/Firmus/src/UrlShortener.Api/obj/Debug/net8.0/UrlShortener.Api.pdb
 /Users/samermahamid/astro/interview/Firmus/src/UrlShortener.Api/obj/Debug/net8.0/UrlShortener.Api.genruntimeconfig.cache
 /Users/samermahamid/astro/interview/Firmus/src/UrlShortener.Api/obj/Debug/net8.0/ref/UrlShortener.Api.dll
+/Users/samermahamid/astro/interview/Firmus/src/UrlShortener.Api/obj/Debug/net8.0/UrlShortener.Api.sourcelink.json

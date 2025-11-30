@@ -17,7 +17,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Redis
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-    ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis") ?? "localhost"));
+{
+    var configuration =
+        builder.Configuration["Redis:ConnectionString"]          // picked up from Redis__ConnectionString
+        ?? builder.Configuration.GetConnectionString("Redis")    // optional fallback if you ever add it
+        ?? "localhost:6379";                                     // last-resort fallback for local dev
+
+    return ConnectionMultiplexer.Connect(configuration);
+});
+
 
 // Services
 builder.Services.AddScoped<IUrlService, UrlService>();

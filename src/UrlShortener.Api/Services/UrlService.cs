@@ -24,24 +24,23 @@ public class UrlService : IUrlService
 
     public async Task<Url> ShortenUrlAsync(ShortenUrlRequest request)
     {
+        var shortCode = !string.IsNullOrWhiteSpace(request.CustomAlias)
+            ? request.CustomAlias.Trim()
+            : GenerateShortCode(request.Url);
+
         // Check if custom alias is provided and unique
-        if (!string.IsNullOrEmpty(request.CustomAlias))
+        if (!string.IsNullOrWhiteSpace(request.CustomAlias))
         {
-            if (await _context.Urls.AnyAsync(u => u.ShortCode == request.CustomAlias))
+            if (await _context.Urls.AnyAsync(u => u.ShortCode == shortCode))
             {
                 throw new InvalidOperationException("Custom alias is already taken.");
             }
-        }
-
-        var shortCode = request.CustomAlias ?? GenerateShortCode(request.Url);
-        
-        // Ensure uniqueness for generated codes (simple retry logic or better algorithm needed for high scale)
-        // For this assignment, we assume collision is rare with enough entropy or we handle it.
-        if (string.IsNullOrEmpty(request.CustomAlias))
-        {
+        } else {
+            // Ensure uniqueness for generated codes (simple retry logic or better algorithm needed for high scale)
+            // For this assignment, we assume collision is rare with enough entropy or we handle it.
             while (await _context.Urls.AnyAsync(u => u.ShortCode == shortCode))
             {
-                shortCode = GenerateShortCode(request.Url + Guid.NewGuid());
+                shortCode = GenerateShortCode(request.Url + Guid.NewGuid().ToString());
             }
         }
 

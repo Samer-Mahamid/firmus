@@ -11,7 +11,7 @@ A high-performance RESTful API for URL shortening with analytics tracking, built
 1. Clone the repository.
 2. Run the following command in the root directory:
    ```bash
-   docker-compose up --build
+   docker compose up --build
    ```
 3. The API will be available at `http://localhost:8080`.
 4. Swagger Documentation: `http://localhost:8080/swagger`.
