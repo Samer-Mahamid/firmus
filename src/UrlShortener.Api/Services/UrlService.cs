@@ -73,9 +73,31 @@ public class UrlService : IUrlService
             // For now, let's fetch from DB if we need the full object, or optimize for redirect later.
             // But the requirement says "Get URL Details", so we likely need to hit DB or cache full object.
             // Let's hit DB for details, and use cache for redirect.
+
+            // We only stored the LongUrl in cache, so reconstruct a minimal Url
+            return new Url
+            {
+                ShortCode = shortCode,
+                LongUrl = cachedUrl!,
+                IsActive = true
+                // CreatedAt/UpdatedAt/Id will be default – fine for redirect
+            };
         }
 
-        return await _context.Urls.FirstOrDefaultAsync(u => u.ShortCode == shortCode && u.IsActive);
+        var url = await _context.Urls
+        .FirstOrDefaultAsync(u => u.ShortCode == shortCode && u.IsActive);
+
+        // Cache on miss
+        if (url is not null)
+        {
+            await _cache.StringSetAsync(
+                $"{UrlCacheKeyPrefix}{shortCode}",
+                url.LongUrl,
+                TimeSpan.FromHours(1) // optional TTL
+            );
+        }
+
+        return url;
     }
 
     public async Task DeleteUrlAsync(string shortCode)
