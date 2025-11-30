@@ -1,0 +1,10 @@
+bin/
+obj/
+.vscode/
+.idea/
+*.user
+*.suo
+.DS_Store
+venv/
+__pycache__/
+.env
